@@ -111,6 +111,7 @@
 <script type="text/javascript" src="Mots.js"></script>
 <script type="text/javascript">
 	var nbRow = 6;
+	var Row = 0;
 	var nbLetter = 7;
 	var activeRow = 0;
 	var trueResponse = "";
@@ -289,7 +290,11 @@
 	}
 
 	function nextRow() {
-
+		Row++;
+		if (Row == nbRow) {
+			nextQuestion();
+			return;
+		}
 		setTimeout(function() {
 			fini = false;
 			time = timeByReponse;
