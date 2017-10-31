@@ -2,6 +2,9 @@
 <html>
 <head>
 	<title>Motus</title>
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	<style type="text/css">
 		td {
 			margin : 0;
@@ -61,14 +64,49 @@
 			font-weight: bold;
 			color: white;
 		}
+
+		h1 {
+			text-align: center;
+			margin: 5% 0; 
+		}
+
+		button {
+			margin: 3% 0;
+		}
+
+		input::placeholder {
+		  color: white;
+		}
+
 	</style>
+	
 </head>
 <body>
-<button id="ngame">New game</button>
-<button>Option</button>
+	<div class="container">
+		<h1> MOTUS </h1>
 
-<table id="grille">
-</table>
+		<div class="row justify-content-md-center">
+			<div id="mainmenu" class="col-md-auto col-lg-4">
+				<div class="row">
+					<button type="button" class="col-lg-12 btn btn-primary btn-lg" id="ngame">New game</button>
+				</div>
+
+				<div class="row">
+					<button type="button" class="col-lg-12 btn btn-primary btn-lg" id="option">Option</button>
+				</div>
+			</div>
+
+			<div id="game">
+				<table id="grille">
+				</table>
+				<div> Score : <span id="score"></span></div>
+				<div> Temps : <span id="time"></span></div>
+			</div>
+
+		</div>
+	</div>
+
+
 
 <script type="text/javascript" src="Mots.js"></script>
 <script type="text/javascript">
@@ -78,24 +116,38 @@
 	var trueResponse = "";
 	var listeLettre = [];
 	var lettrePlacee = [];
-	var random = test[Math.round(Math.random()*test.length)];
-	console.log(random);
-	var trueResponse = random;
+	var trueResponse;
+	var time = 0;
+	var timeByReponse = 30;
+	var fini = true;
+
+	function chrono() {
+		if (!fini && time != 0) {
+			time--;
+			$("#time").text(time);
+			if (time == 0) { nextRow(); fini = true;}
+		} else {
+			time = timeByReponse;
+
+		}
+	}
 
 	window.onload = (function(){
 		var grille = document.getElementById("grille");
 		console.log("window load");
 
+		
+		
+
 		document.getElementById("ngame").onclick = function() {
-			console.log("clicked");
-			console.log(nbRow);
+			$("#mainmenu").hide();
 			for (var i = 0; i < nbRow; i++) {
 				console.log("row");
 				grille.innerHTML += "<tr id=row"+i+"></tr>";
 				var currentRow = document.getElementById("row"+i);
 				if ( i == 0) {
 					for (var j = 0;  j < nbLetter; j++) {
-						currentRow.innerHTML += "<td id=row"+i+"input"+j+"><input value='_' onkeypress='nextCase(this, event)'/></td>";
+						currentRow.innerHTML += "<td id=row"+i+"input"+j+"><input placeholder='_' onkeypress='nextCase(this, event)'/></td>";
 					}
 				} else {
 					for (var j = 0;  j < nbLetter; j++) {
@@ -106,6 +158,9 @@
 
 			setNewGrid();
 			placeLettre();
+
+			
+			window.setInterval('chrono()', 1000);
 
 
 
@@ -141,6 +196,7 @@
 			// case retour arriere :
 
 			case 13 /* enter*/ :
+				fini = true;
 				validResponse();
 				break;
 
@@ -235,12 +291,13 @@
 	function nextRow() {
 
 		setTimeout(function() {
-
+			fini = false;
+			time = timeByReponse;
 			activeRow ++;
 			var coll = document.getElementById("row"+activeRow).children;
 			for (i = 0; i < coll.length; i++) {
 				coll[i].children[0].disabled = false;
-				coll[i].children[0].value = "_";
+				coll[i].children[0].setAttribute("placeholder", "_");
 			}
 			placeLettre();
 			console.log(activeRow*nbLetter-1);
@@ -265,6 +322,7 @@
 	}
 
 	function setNewGrid() {
+		trueResponse = test[Math.round(Math.random()*test.length)];
 		activeRow = 0;
 		lettrePlacee = [];
 		for (i = 0; i < nbLetter; i++) {
@@ -277,7 +335,8 @@
 		var rand = Math.round(Math.random()*5)+1;
 		lettrePlacee[0] = true;
 		lettrePlacee[rand] = true;
-
+		fini = false;
+		time = timeByReponse;
 		// document.getElementById("row0input"+rand1).children[0].value = trueResponse[rand1];
 		// document.getElementById("row0input"+rand2).children[0].value = trueResponse[rand2];
 
