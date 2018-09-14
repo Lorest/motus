@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Motus v0.2</title>
+		<title>Motus v0.4</title>
 
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -16,6 +16,10 @@
 			table, tr, td {
 				border-collapse: collapse;
 				background-color: blue;
+			}
+
+			body {
+				background-color: #C6E2FF;
 			}
 
 			.wrong-place {
@@ -59,7 +63,7 @@
 				height: 50px;
 				text-align: center;
 				font-size: 24px;
-				background-color: blue;
+				background-image: linear-gradient(#2070ff, #0040ff);
 				text-transform: uppercase;
 				font-weight: bold;
 				color: white;
@@ -78,6 +82,21 @@
 			  color: white;
 			}
 
+			#time {
+				font-size: 40px;
+				color: red;
+				font-family: "Times New Roman", Times, serif;
+				background-color: yellow;
+				width: 50px;
+				height: 50px;
+				border-radius: 50px;
+				text-align: center;
+				vertical-align: middle;
+				font-weight: bolder;
+				line-height: 50px;
+				padding: auto;
+			}
+
 		</style>
 		
 	</head>
@@ -86,21 +105,32 @@
 			<h1> MOTUS </h1>
 
 			<div class="row justify-content-md-center">
-				<div id="mainmenu" class="col-md-auto col-lg-4">
+				<div id="mainmenu" class="col-md-auto col-lg-4 menu">
 					<div class="row">
 						<button type="button" class="col-lg-12 btn btn-primary btn-lg" id="ngame">New game</button>
 					</div>
 
 					<div class="row">
-						<button type="button" class="col-lg-12 btn btn-primary btn-lg" id="option">Option</button>
+						<button type="button" disabled="true" class="col-lg-12 btn btn-primary btn-lg" id="option">Option</button>
+					</div>
+
+					<div class="row">
+						<button type="button" disabled="true" class="col-lg-12 btn btn-primary btn-lg" id="a_propos">A propos</button>
+					</div>
+
+					<div class="row">
+						<p>Momotutus v0.4</p>
 					</div>
 				</div>
 
-				<div id="game">
+				<div id="game" class="menu">
 					<table id="grille">
 					</table>
-					<div> Score : <span id="score"></span></div>
-					<div> Temps : <span id="time"></span></div>
+					<div hidden="true"> Score : <span id="score"></span></div>
+					<div id="timeDiv"> Temps : <div id="time"></div></div>
+					<div class="row">
+						<button type="button" class="col-lg-12 btn btn-primary btn-lg" id="backMain">Retour au menu</button>
+					</div>
 				</div>
 
 			</div>
@@ -110,6 +140,7 @@
 
 	<script type="text/javascript" src="Mots.js"></script>
 	<script type="text/javascript">
+
 		var nbRow = 6;
 		var Row = 0;
 		var nbLetter = 7;
@@ -121,6 +152,7 @@
 		var time = 0;
 		var timeByReponse = 30;
 		var fini = true;
+		var chronoInterval;
 
 		function chrono() {
 			if (!fini && time != 0) {
@@ -132,15 +164,27 @@
 			}
 		}
 
+		function menuSelect(menuSelect) {
+			$(".menu").hide();
+			menuSelect.show();
+		}
+
 		window.onload = (function(){
+			menuSelect($("#mainmenu").show());
 			var grille = document.getElementById("grille");
 			console.log("window load");
 
 			
-			
+			$("#backMain").click(function(){
+				window.clearInterval(chronoInterval);
+				$("#grille").empty();
+				menuSelect($("#mainmenu").show());
+			});
 
 			document.getElementById("ngame").onclick = function() {
 				$("#mainmenu").hide();
+				$("#game").show();
+				$("#time").text(timeByReponse);
 				for (var i = 0; i < nbRow; i++) {
 					console.log("row");
 					grille.innerHTML += "<tr id=row"+i+"></tr>";
@@ -159,7 +203,7 @@
 				setNewGrid();
 				placeLettre();
 
-				window.setInterval('chrono()', 1000);
+				chronoInterval = window.setInterval('chrono()', 1000);
 
 			}
 
@@ -291,9 +335,7 @@
 		}
 
 		function nextRow() {
-			console.log(Row);
-			activeRow++;
-			if (activeRow >= nbRow) {
+			if (activeRow+1 >= nbRow) {
 				setTimeout(function() {
 					nextQuestion();
 					return;
@@ -304,6 +346,7 @@
 				setTimeout(function() {
 					fini = false;
 					time = timeByReponse;
+					activeRow++;
 					var coll = document.getElementById("row"+activeRow).children;
 					for (i = 0; i < coll.length; i++) {
 						coll[i].children[0].disabled = false;
