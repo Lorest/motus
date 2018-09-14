@@ -1,290 +1,358 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<title>Motus</title>
-	<style type="text/css">
-		td {
-			margin : 0;
-			padding: 0;
-			border : black solid 1px;
-			
-		}
+	<head>
+		<title>Motus</title>
 
-		table, tr, td {
-			border-collapse: collapse;
-			background-color: blue;
-		}
-
-		.wrong-place {
-			background-color: #ffc300;
-			width: 40px;
-			height: 40px;
-			border-radius: 40px;
-			margin-left: 5px;
-		}
-
-		.normal {
-			border : 0px;
-			width: 50px;
-			height: 50px;
-			text-align: center;
-			font-size: 24px;
-			background-color: blue;
-		}
-
-		.wrong {
-			border : 0px;
-			width: 50px;
-			height: 50px;
-			text-align: center;
-			font-size: 24px;
-			background-color: darkblue;
-		}
-
-		.right {
-			border : 0px;
-			width: 50px;
-			height: 50px;
-			text-align: center;
-			font-size: 24px;
-			background-color: red;
-		}
-
-		input {
-			border : 0px;
-			width: 50px;
-			height: 50px;
-			text-align: center;
-			font-size: 24px;
-			background-color: blue;
-			text-transform: uppercase;
-			font-weight: bold;
-			color: white;
-		}
-	</style>
-</head>
-<body>
-<button id="ngame">New game</button>
-<button>Option</button>
-
-<table id="grille">
-</table>
-
-<script type="text/javascript" src="Mots.js"></script>
-<script type="text/javascript">
-	var nbRow = 6;
-	var nbLetter = 7;
-	var activeRow = 0;
-	var trueResponse = "";
-	var listeLettre = [];
-	var lettrePlacee = [];
-	var random = test[Math.round(Math.random()*test.length)];
-	console.log(random);
-	var trueResponse = random;
-
-	window.onload = (function(){
-		var grille = document.getElementById("grille");
-		console.log("window load");
-
-		document.getElementById("ngame").onclick = function() {
-			console.log("clicked");
-			console.log(nbRow);
-			for (var i = 0; i < nbRow; i++) {
-				console.log("row");
-				grille.innerHTML += "<tr id=row"+i+"></tr>";
-				var currentRow = document.getElementById("row"+i);
-				if ( i == 0) {
-					for (var j = 0;  j < nbLetter; j++) {
-						currentRow.innerHTML += "<td id=row"+i+"input"+j+"><input value='_' onkeypress='nextCase(this, event)'/></td>";
-					}
-				} else {
-					for (var j = 0;  j < nbLetter; j++) {
-						currentRow.innerHTML += "<td id=row"+i+"input"+j+"><input disabled onkeypress='nextCase(this, event)'/></td>";
-					}	
-				}
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<style type="text/css">
+			td {
+				margin : 0;
+				padding: 0;
+				border : black solid 1px;
+				
 			}
 
-			setNewGrid();
-			placeLettre();
+			table, tr, td {
+				border-collapse: collapse;
+				background-color: blue;
+			}
+
+			.wrong-place {
+				background-color: #ffc300;
+				width: 40px;
+				height: 40px;
+				border-radius: 40px;
+				margin-left: 5px;
+			}
+
+			.normal {
+				border : 0px;
+				width: 50px;
+				height: 50px;
+				text-align: center;
+				font-size: 24px;
+				background-color: blue;
+			}
+
+			.wrong {
+				border : 0px;
+				width: 50px;
+				height: 50px;
+				text-align: center;
+				font-size: 24px;
+				background-color: darkblue;
+			}
+
+			.right {
+				border : 0px;
+				width: 50px;
+				height: 50px;
+				text-align: center;
+				font-size: 24px;
+				background-color: red;
+			}
+
+			input {
+				border : 0px;
+				width: 50px;
+				height: 50px;
+				text-align: center;
+				font-size: 24px;
+				background-color: blue;
+				text-transform: uppercase;
+				font-weight: bold;
+				color: white;
+			}
+
+			h1 {
+				text-align: center;
+				margin: 5% 0; 
+			}
+
+			button {
+				margin: 3% 0;
+			}
+
+			input::placeholder {
+			  color: white;
+			}
+
+		</style>
+		
+	</head>
+	<body>
+		<div class="container">
+			<h1> MOTUS </h1>
+
+			<div class="row justify-content-md-center">
+				<div id="mainmenu" class="col-md-auto col-lg-4">
+					<div class="row">
+						<button type="button" class="col-lg-12 btn btn-primary btn-lg" id="ngame">New game</button>
+					</div>
+
+					<div class="row">
+						<button type="button" class="col-lg-12 btn btn-primary btn-lg" id="option">Option</button>
+					</div>
+				</div>
+
+				<div id="game">
+					<table id="grille">
+					</table>
+					<div> Score : <span id="score"></span></div>
+					<div> Temps : <span id="time"></span></div>
+				</div>
+
+			</div>
+		</div>
 
 
 
+	<script type="text/javascript" src="Mots.js"></script>
+	<script type="text/javascript">
+		var nbRow = 6;
+		var Row = 0;
+		var nbLetter = 7;
+		var activeRow = 0;
+		var trueResponse = "";
+		var listeLettre = [];
+		var lettrePlacee = [];
+		var trueResponse;
+		var time = 0;
+		var timeByReponse = 30;
+		var fini = true;
 
+		function chrono() {
+			if (!fini && time != 0) {
+				time--;
+				$("#time").text(time);
+				if (time == 0) { nextRow(); fini = true;}
+			} else {
+				time = timeByReponse;
+			}
 		}
 
+		window.onload = (function(){
+			var grille = document.getElementById("grille");
+			console.log("window load");
 
-	});
+			
+			
 
-	function nextCase(el, ev) {
-		//ev.preventDefault();
-		var keynum = ev.keyCode;
-
-		switch (keynum) {
-
-			/* Malheureusement impossible pour le moment
-			case "37" :
-				console.log("left");
-				if (el.parentElement.nextSibling != null) {
-					var prevEl = el.parentElement.previousSibling.children[0];
-					prevEl.focus();
+			document.getElementById("ngame").onclick = function() {
+				$("#mainmenu").hide();
+				for (var i = 0; i < nbRow; i++) {
+					console.log("row");
+					grille.innerHTML += "<tr id=row"+i+"></tr>";
+					var currentRow = document.getElementById("row"+i);
+					if ( i == 0) {
+						for (var j = 0;  j < nbLetter; j++) {
+							currentRow.innerHTML += "<td id=row"+i+"input"+j+"><input placeholder='_' onkeypress='nextCase(this, event)'/></td>";
+						}
+					} else {
+						for (var j = 0;  j < nbLetter; j++) {
+							currentRow.innerHTML += "<td id=row"+i+"input"+j+"><input disabled onkeypress='nextCase(this, event)'/></td>";
+						}	
+					}
 				}
-			break;
 
-			case "39" :
-				console.log("right");
-				if (el.parentElement.nextSibling != null) {
-					var prevEl = el.parentElement.nextSibling.children[0];
-					nextEl.focus();
-				}
-			break;
-			*/
-			// case retour arriere :
+				setNewGrid();
+				placeLettre();
 
-			case 13 /* enter*/ :
-				validResponse();
+				window.setInterval('chrono()', 1000);
+
+			}
+
+
+		});
+
+		function nextCase(el, ev) {
+			//ev.preventDefault();
+			var keynum = ev.keyCode;
+
+			switch (keynum) {
+
+				/* Malheureusement impossible pour le moment
+				case "37" :
+					console.log("left");
+					if (el.parentElement.nextSibling != null) {
+						var prevEl = el.parentElement.previousSibling.children[0];
+						prevEl.focus();
+					}
 				break;
 
-			default :
-				console.log("default");
-				el.value = null;
-				if (el.parentElement.nextSibling != null) {
-					var nextEl = el.parentElement.nextSibling.children[0];
-					nextEl.focus();
+				case "39" :
+					console.log("right");
+					if (el.parentElement.nextSibling != null) {
+						var prevEl = el.parentElement.nextSibling.children[0];
+						nextEl.focus();
+					}
+				break;
+				*/
+				// case retour arriere :
+
+				case 13 /* enter */ :
+
+				if (!fini) {
+					fini = true;
+					validate = true;
+					validResponse();
 				}
-			break;
+					break;
+
+				default :
+					console.log("default");
+					el.value = null;
+					if (el.parentElement.nextSibling != null) {
+						var nextEl = el.parentElement.nextSibling.children[0];
+						nextEl.focus();
+					}
+				break;
+			}
 		}
-	}
 
-	function validResponse() {
-		//On stocke dans un tableau les lettres du mot
-		
-		for (i = 0; i<trueResponse.length; i++) {
-			listeLettre.push(trueResponse[i]);
-		}
-
-		var elActiv = document.getElementById("row"+activeRow);
-		var response = "";
-		
-
-		// On crée une response en concatenant les lettres dans les cases
-		for(i = 0; i < elActiv.children["length"]; i++) {
-			response += elActiv.children[i].children[0].value;
-		}
-		////////
-		console.log(response, test.indexOf(response));
-		if (test.indexOf(response) != -1) {
-
-			for (i = 0; i < trueResponse.length; i++) {
-				checkResponse(response, trueResponse, i);
+		function validResponse() {
+			listeLettre = [];
+			//On stocke dans un tableau les lettres du mot
+			
+			for (i = 0; i<trueResponse.length; i++) {
+				listeLettre.push(trueResponse[i]);
 			}
 
-			//listeLettre = [];
+			var elActiv = document.getElementById("row"+activeRow);
+			var response = "";
+			
 
-			if (trueResponse == response ) {
-				nextQuestion();
+			// On crée une response en concatenant les lettres dans les cases
+			for(i = 0; i < elActiv.children["length"]; i++) {
+				response += elActiv.children[i].children[0].value;
+			}
+			////////
+			console.log(response, test.indexOf(response));
+			if (test.indexOf(response) != -1) {
+
+				for (i = 0; i < trueResponse.length; i++) {
+					checkResponse(response, trueResponse, i);
+				}
+
+				//listeLettre = [];
+
+				if (trueResponse == response ) {
+					nextQuestion();
+				} else {
+					nextRow();
+				}	
 			} else {
 				nextRow();
 			}	
-		} else {
-			nextRow();
-		}	
-	}
+		}
 
-	function checkResponse(response, trueResponse, i) {
-		setTimeout(function() {
-			console.log(i);
-			var el = document.getElementById("row"+activeRow+"input"+i).children[0];
-			el.disabled = true;
-			if (response[i] == trueResponse[i]) {
-				listeLettre[i] = null;
-				el.className = "right";
-				lettrePlacee[i] = true;
-			} else {
-				for (j = 0; j < listeLettre.length; j ++) {
-					if (listeLettre[j] == response[i] &&
-						response[j] != trueResponse[j])
-					{
-						listeLettre[j] = null;
-						el.className = "wrong-place";
-						console.log(listeLettre, trueResponse, response);
-						return;
-					}
-					console.log(listeLettre, trueResponse, response);
-
-					
-				}
-
-				el.className = "wrong";
-			}
-		}, i*500);
-	}
-
-	function nextQuestion() {
-		setTimeout(function() {
-
-			var coll = document.getElementsByTagName("input");
-			for (i = 0; i < coll.length; i++) {
-				coll[i].value = null;
-				coll[i].className = "normal";
-			}
-
-			setNewGrid();
-		}, (nbLetter+3)*500);
-	}
-
-	function nextRow() {
-
-		setTimeout(function() {
-
-			activeRow ++;
-			var coll = document.getElementById("row"+activeRow).children;
-			for (i = 0; i < coll.length; i++) {
-				coll[i].children[0].disabled = false;
-				coll[i].children[0].value = "_";
-			}
-			placeLettre();
-			console.log(activeRow*nbLetter-1);
-
+		function afficheReponse() {
 			for (i = 0; i < nbLetter; i++) {
-				if (!lettrePlacee[i]) {
-					document.getElementsByTagName("input")[activeRow*nbLetter+i].focus();
-					i = nbLetter;
-				}
-			}
-
-
-		}, nbLetter*500);
-	}
-
-	function placeLettre() {
-		for (i = 0; i < nbLetter; i++) {
-			if (lettrePlacee[i]) {
 				document.getElementById("row"+activeRow+"input"+i).children[0].value = trueResponse[i];
 			}
 		}
-	}
 
-	function setNewGrid() {
-		activeRow = 0;
-		lettrePlacee = [];
-		for (i = 0; i < nbLetter; i++) {
-			lettrePlacee.push(false);
-			document.getElementsByTagName("input")[i].disabled = false;
+		function checkResponse(response, trueResponse, i) {
+			setTimeout(function() {
+				//console.log(i);
+				var el = document.getElementById("row"+activeRow+"input"+i).children[0];
+				el.disabled = true;
+				if (response[i] == trueResponse[i]) {
+					listeLettre[i] = null;
+					el.className = "right";
+					lettrePlacee[i] = true;
+				} else {
+					for (j = 0; j < listeLettre.length; j ++) {
+						if (listeLettre[j] == response[i] &&
+							response[j] != trueResponse[j])
+						{
+							listeLettre[j] = null;
+							el.className = "wrong-place";
+							//console.log(listeLettre, trueResponse, response);
+							return;
+						}
+						console.log(listeLettre, trueResponse, response);	
+					}
+					el.className = "wrong";
+				}
+			}, i*500);
 		}
-		document.getElementsByTagName("input")[0].focus();
 
-		// 2 lettres déjà placée
-		var rand = Math.round(Math.random()*5)+1;
-		lettrePlacee[0] = true;
-		lettrePlacee[rand] = true;
+		function nextQuestion() {
+			setTimeout(function() {
+				var coll = document.getElementsByTagName("input");
+				for (i = 0; i < coll.length; i++) {
+					coll[i].value = null;
+					coll[i].className = "normal";
+				}
+				setNewGrid();
+			}, (nbLetter+3)*500);
+		}
 
-		// document.getElementById("row0input"+rand1).children[0].value = trueResponse[rand1];
-		// document.getElementById("row0input"+rand2).children[0].value = trueResponse[rand2];
+		function nextRow() {
+			console.log(Row);
+			activeRow++;
+			if (activeRow >= nbRow) {
+				setTimeout(function() {
+					nextQuestion();
+					return;
+				}, 3000)
+				afficheReponse();
 
-		placeLettre();
-	}
+			} else {
+				setTimeout(function() {
+					fini = false;
+					time = timeByReponse;
+					var coll = document.getElementById("row"+activeRow).children;
+					for (i = 0; i < coll.length; i++) {
+						coll[i].children[0].disabled = false;
+						coll[i].children[0].setAttribute("placeholder", "_");
+					}
+					placeLettre();
+					console.log(activeRow*nbLetter-1);
 
-	
-</script>
-</body>
+					for (i = 0; i < nbLetter; i++) {
+						if (!lettrePlacee[i]) {
+							document.getElementsByTagName("input")[activeRow*nbLetter+i].focus();
+							i = nbLetter;
+						}
+					}
+				}, nbLetter*500);
+			}
+		}
+
+		function placeLettre() {
+			for (i = 0; i < nbLetter; i++) {
+				if (lettrePlacee[i]) {
+					document.getElementById("row"+activeRow+"input"+i).children[0].value = trueResponse[i];
+				}
+			}
+		}
+
+		function setNewGrid() {
+			trueResponse = test[Math.round(Math.random()*test.length)];
+			activeRow = 0;
+			lettrePlacee = [];
+			for (i = 0; i < nbLetter; i++) {
+				lettrePlacee.push(false);
+				document.getElementsByTagName("input")[i].disabled = false;
+			}
+			document.getElementsByTagName("input")[0].focus();
+
+			// 2 lettres déjà placée
+			var rand = Math.round(Math.random()*(nbLetter-1))+1;
+			lettrePlacee[0] = true;
+			lettrePlacee[rand] = true;
+			fini = false;
+			time = timeByReponse;
+			// document.getElementById("row0input"+rand1).children[0].value = trueResponse[rand1];
+			// document.getElementById("row0input"+rand2).children[0].value = trueResponse[rand2];
+
+			placeLettre();
+		}
+
+		
+	</script>
+	</body>
 </html>
