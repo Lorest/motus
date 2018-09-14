@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Motus v0.4</title>
+		<title>Momotutus</title>
 
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -15,7 +15,7 @@
 
 			table, tr, td {
 				border-collapse: collapse;
-				background-color: blue;
+				background-image: linear-gradient(#2070ff, #0040ff);
 			}
 
 			body {
@@ -28,6 +28,11 @@
 				height: 40px;
 				border-radius: 40px;
 				margin-left: 5px;
+				text-align: center;
+				text-transform: uppercase;
+				font-weight: bold;
+				color: white;
+				font-size: 24px;
 			}
 
 			.normal {
@@ -36,7 +41,7 @@
 				height: 50px;
 				text-align: center;
 				font-size: 24px;
-				background-color: blue;
+				background-image: linear-gradient(#2070ff, #0040ff);
 			}
 
 			.wrong {
@@ -46,6 +51,9 @@
 				text-align: center;
 				font-size: 24px;
 				background-color: darkblue;
+				text-transform: uppercase;
+				font-weight: bold;
+				color: white;
 			}
 
 			.right {
@@ -55,9 +63,12 @@
 				text-align: center;
 				font-size: 24px;
 				background-color: red;
+				text-transform: uppercase;
+				font-weight: bold;
+				color: white;				
 			}
 
-			input {
+			.case {
 				border : 0px;
 				width: 50px;
 				height: 50px;
@@ -78,7 +89,7 @@
 				margin: 3% 0;
 			}
 
-			input::placeholder {
+			.case::placeholder {
 			  color: white;
 			}
 
@@ -111,7 +122,7 @@
 					</div>
 
 					<div class="row">
-						<button type="button" disabled="true" class="col-lg-12 btn btn-primary btn-lg" id="option">Option</button>
+						<button type="button" class="col-lg-12 btn btn-primary btn-lg" id="option">Option</button>
 					</div>
 
 					<div class="row">
@@ -119,7 +130,7 @@
 					</div>
 
 					<div class="row">
-						<p>Momotutus v0.4</p>
+						<p>Version 0.5</p>
 					</div>
 				</div>
 
@@ -129,7 +140,20 @@
 					<div hidden="true"> Score : <span id="score"></span></div>
 					<div id="timeDiv"> Temps : <div id="time"></div></div>
 					<div class="row">
-						<button type="button" class="col-lg-12 btn btn-primary btn-lg" id="backMain">Retour au menu</button>
+						<button type="button" class="col-lg-12 btn btn-primary btn-lg" id="backMainGame">Retour au menu</button>
+					</div>
+				</div>
+
+				<div id="optionMenu" class="col-md-auto col-lg-4 menu">
+					<div class="row"><label class="col-md-auto col-lg-6">Nombre de lettre :</label><input name="1" class="col-md-auto col-lg-6" value="7" disabled ="true" type="number" id="nbLetterInput"></div>
+					<div class="row"><label class="col-md-auto col-lg-6">Nombre de ligne :</label><input name="2" class="col-md-auto col-lg-6" value="6" type="number" id="nbLigneInput"></div>
+					<div class="row"><label class="col-md-auto col-lg-6">Temps :</label><input name="3" class="col-md-auto col-lg-6" type="number" value="30" id="timeInput"></div>
+					<div class="row"><label class="col-md-auto col-lg-6">Position du curseur au début :</label><input name="4" class="col-md-auto col-lg-6" 	checked="true" type="checkbox" id="positionCurseur"></div>
+					<div class="row">
+						<button type="button" class="col-lg-12 btn btn-primary btn-lg" id="valOption">Valider</button>
+					</div>
+					<div class="row">
+						<button type="button" class="col-lg-12 btn btn-primary btn-lg" id="backMainOption">Retour au menu</button>
 					</div>
 				</div>
 
@@ -153,6 +177,7 @@
 		var timeByReponse = 30;
 		var fini = true;
 		var chronoInterval;
+		var position = true;
 
 		function chrono() {
 			if (!fini && time != 0) {
@@ -170,16 +195,31 @@
 		}
 
 		window.onload = (function(){
-			menuSelect($("#mainmenu").show());
+			menuSelect($("#mainmenu"));
 			var grille = document.getElementById("grille");
-			console.log("window load");
 
 			
-			$("#backMain").click(function(){
+			$("#backMainGame").click(function(){
 				window.clearInterval(chronoInterval);
 				$("#grille").empty();
-				menuSelect($("#mainmenu").show());
+				menuSelect($("#mainmenu"));
 			});
+
+			$("#backMainOption").click(function(){
+				menuSelect($("#mainmenu"));
+			});
+
+			$("#valOption").click(function(){
+				nbRow = $("#nbLigneInput").val();
+				//nbLetter = $("nbLetterInput");
+				position = $("#positionCurseur").is(':checked');
+				timeByReponse = $("#timeInput").val();
+				menuSelect($("#mainmenu"));
+			});
+
+			$("#option").click(function(){
+				menuSelect($("#optionMenu"));
+			})
 
 			document.getElementById("ngame").onclick = function() {
 				$("#mainmenu").hide();
@@ -191,11 +231,11 @@
 					var currentRow = document.getElementById("row"+i);
 					if ( i == 0) {
 						for (var j = 0;  j < nbLetter; j++) {
-							currentRow.innerHTML += "<td id=row"+i+"input"+j+"><input placeholder='_' onkeypress='nextCase(this, event)'/></td>";
+							currentRow.innerHTML += "<td id=row"+i+"input"+j+"><input class='case' placeholder='_' onkeypress='nextCase(this, event)'/></td>";
 						}
 					} else {
 						for (var j = 0;  j < nbLetter; j++) {
-							currentRow.innerHTML += "<td id=row"+i+"input"+j+"><input disabled onkeypress='nextCase(this, event)'/></td>";
+							currentRow.innerHTML += "<td id=row"+i+"input"+j+"><input class='case' disabled onkeypress='nextCase(this, event)'/></td>";
 						}	
 					}
 				}
@@ -354,13 +394,17 @@
 					}
 					placeLettre();
 					console.log(activeRow*nbLetter-1);
-
-					for (i = 0; i < nbLetter; i++) {
-						if (!lettrePlacee[i]) {
-							document.getElementsByTagName("input")[activeRow*nbLetter+i].focus();
-							i = nbLetter;
+					if (position) {
+						for (i = 0; i < nbLetter; i++) {
+							if (!lettrePlacee[i]) {
+								document.getElementsByTagName("input")[activeRow*nbLetter+i].focus();
+								i = nbLetter;
+							}
 						}
+					} else {
+						document.getElementsByTagName("input")[activeRow*nbLetter].focus();
 					}
+					
 				}, nbLetter*500);
 			}
 		}
@@ -374,6 +418,7 @@
 		}
 
 		function setNewGrid() {
+			$("#game input").addClass("case");
 			trueResponse = test[Math.round(Math.random()*test.length)];
 			activeRow = 0;
 			lettrePlacee = [];
