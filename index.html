@@ -130,7 +130,7 @@
 					</div>
 
 					<div class="row">
-						<p>Version 0.51</p>
+						<p>Version 0.52 (28/11/2018)</p>
 					</div>
 				</div>
 
@@ -259,23 +259,23 @@
 
 			switch (keynum) {
 
-				/* Malheureusement impossible pour le moment
-				case "37" :
+				case 37 :
 					console.log("left");
-					if (el.parentElement.nextSibling != null) {
+					if (el.parentElement.previousSibling != null) {
 						var prevEl = el.parentElement.previousSibling.children[0];
+						console.log("element:", el,"previous",prevEl);
 						prevEl.focus();
 					}
 				break;
 
-				case "39" :
+				case 39 :
 					console.log("right");
 					if (el.parentElement.nextSibling != null) {
-						var prevEl = el.parentElement.nextSibling.children[0];
+						var nextEl = el.parentElement.nextSibling.children[0];
 						nextEl.focus();
 					}
 				break;
-				*/
+				
 				// case retour arriere :
 
 				case 13 /* enter */ :
@@ -288,7 +288,7 @@
 					break;
 
 				default :
-					console.log("default");
+					console.log(keynum);
 					el.value = null;
 					if (el.parentElement.nextSibling != null) {
 						var nextEl = el.parentElement.nextSibling.children[0];
