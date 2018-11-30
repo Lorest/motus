@@ -126,11 +126,11 @@
 					</div>
 
 					<div class="row">
-						<button type="button" disabled="true" class="col-lg-12 btn btn-primary btn-lg" id="a_propos">A propos</button>
+						<button type="button" class="col-lg-12 btn btn-primary btn-lg" id="a_propos">A propos</button>
 					</div>
 
 					<div class="row">
-						<p>Version 0.53 (28/11/2018)</p>
+						<p>Version 0.54</p>
 					</div>
 				</div>
 
@@ -139,6 +139,10 @@
 					</table>
 					<div id="scoreDiv"> Score : <div class="sctime" id="score"></div></div>
 					<div id="timeDiv"> Temps : <div class="sctime" id="time"></div></div>
+					<!--<div class="row">
+						<button type="button" class="col-lg-6 btn btn-primary btn-lg" id="nxtWord">Mot suivant</button>
+						<button type="button" class="col-lg-6 btn btn-primary btn-lg" id="reportWord">Signaler le mot</button>
+					</div>-->
 					<div class="row">
 						<button type="button" class="col-lg-12 btn btn-primary btn-lg" id="backMainGame">Retour au menu</button>
 					</div>
@@ -153,8 +157,33 @@
 						<button type="button" class="col-lg-12 btn btn-primary btn-lg" id="valOption">Valider</button>
 					</div>
 					<div class="row">
-						<button type="button" class="col-lg-12 btn btn-primary btn-lg" id="backMainOption">Retour au menu</button>
+						<button type="button" class="col-lg-12 btn btn-primary btn-lg backMainOption">Retour au menu</button>
 					</div>
+				</div>
+
+				<div id="patchNote" class="col-md-auto col-lg-4 menu">
+					<h3> Regle </h3>
+					<br>
+					<p>#TO DO</p>
+					<br>
+					<h3>Patch note</h3>
+					<br>
+					<ul>
+						<li>In progress</li>
+						<p>Signalement des mots incoherents</p>
+						<hr>
+						<li>Patch 0.54 - 30/11/2018</li>
+						<p>Fix bug on phone</p>
+						<p>Ajout du patch note</p>
+						<hr>
+						<li>Patch 0.53 - 28/11/2018</li>
+						<p>Deplacement entre case avec les fleches</p>
+					</ul>
+
+					<div class="row">
+						<button type="button" class="col-lg-12 btn btn-primary btn-lg backMainOption">Retour au menu</button>
+					</div>
+
 				</div>
 
 			</div>
@@ -208,9 +237,17 @@
 				menuSelect($("#mainmenu"));
 			});
 
-			$("#backMainOption").click(function(){
+			$(".backMainOption").click(function(){
 				menuSelect($("#mainmenu"));
 			});
+
+			$("#a_propos").click(function(){
+				menuSelect($("#patchNote"));
+			});
+
+			$("#option").click(function(){
+				menuSelect($("#optionMenu"));
+			})
 
 			$("#valOption").click(function(){
 				nbRow = $("#nbLigneInput").val();
@@ -220,9 +257,7 @@
 				menuSelect($("#mainmenu"));
 			});
 
-			$("#option").click(function(){
-				menuSelect($("#optionMenu"));
-			})
+			
 
 			document.getElementById("ngame").onclick = function() {
 				$("#mainmenu").hide();
@@ -234,11 +269,11 @@
 					var currentRow = document.getElementById("row"+i);
 					if ( i == 0) {
 						for (var j = 0;  j < nbLetter; j++) {
-							currentRow.innerHTML += "<td id=row"+i+"input"+j+"><input class='case' placeholder='_' onkeypress='nextCase(this, event)'/></td>";
+							currentRow.innerHTML += "<td id=row"+i+"input"+j+"><input class='case' placeholder='_' onkeyup='nextCase(this, event)'/></td>";
 						}
 					} else {
 						for (var j = 0;  j < nbLetter; j++) {
-							currentRow.innerHTML += "<td id=row"+i+"input"+j+"><input class='case' disabled onkeypress='nextCase(this, event)'/></td>";
+							currentRow.innerHTML += "<td id=row"+i+"input"+j+"><input class='case' disabled onkeyup='nextCase(this, event)'/></td>";
 						}	
 					}
 				}
