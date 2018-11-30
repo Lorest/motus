@@ -130,7 +130,7 @@
 					</div>
 
 					<div class="row">
-						<p>Version 0.54</p>
+						<p>Version 0.55</p>
 					</div>
 				</div>
 
@@ -172,6 +172,8 @@
 						<li>In progress</li>
 						<p>Signalement des mots incoherents</p>
 						<hr>
+						<li>Patch 0.55 - 30/11/2018</li>
+						<p>Fix bug from patch 0.54</p>
 						<li>Patch 0.54 - 30/11/2018</li>
 						<p>Fix bug on phone</p>
 						<p>Ajout du patch note</p>
@@ -269,11 +271,11 @@
 					var currentRow = document.getElementById("row"+i);
 					if ( i == 0) {
 						for (var j = 0;  j < nbLetter; j++) {
-							currentRow.innerHTML += "<td id=row"+i+"input"+j+"><input class='case' placeholder='_' onkeyup='nextCase(this, event)'/></td>";
+							currentRow.innerHTML += "<td id=row"+i+"input"+j+"><input class='case' placeholder='_' onkeypress='nextCase(this, event)'/></td>";
 						}
 					} else {
 						for (var j = 0;  j < nbLetter; j++) {
-							currentRow.innerHTML += "<td id=row"+i+"input"+j+"><input class='case' disabled onkeyup='nextCase(this, event)'/></td>";
+							currentRow.innerHTML += "<td id=row"+i+"input"+j+"><input class='case' disabled onkeypress='nextCase(this, event)'/></td>";
 						}	
 					}
 				}
